@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.IO;
 using System.Text;
 using System.Threading.Tasks;
+using System.Runtime.Serialization.Json;
 
 using StackDo.Interface;
 using StackDo.Display;
+using StackDo.Core;
 
 namespace StackDo
 {
@@ -13,7 +16,11 @@ namespace StackDo
     {
         static void Main(string[] args)
         {
-            ITodoContainer rootContainer = LoadRoot();
+            DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(TodoContainer), new DataContractJsonSerializerSettings()
+            {
+
+            });
+            ITodoContainer rootContainer = LoadRoot(serializer);
             ITodoContainer currentContainer = rootContainer;
 
             ITodoDisplay detailedDisplay = new DetailedTodoDisplay();
@@ -23,13 +30,29 @@ namespace StackDo
             while (HandleInput(detailedContainerDisplay, ref currentContainer))
             {
             }
+
+            SaveRoot(serializer, rootContainer);
         }
 
-        static ITodoContainer LoadRoot()
+        static ITodoContainer LoadRoot(DataContractJsonSerializer serializer)
         {
-            ITodoContainer rootContainer = new TodoContainer();
+            if (!File.Exists("serialized.json"))
+            {
+                return new TodoContainer();
+            }
 
-            return rootContainer;
+            using (Stream stream = File.OpenRead("serialized.json"))
+            {
+                return (TodoContainer)serializer.ReadObject(stream);
+            }
+        }
+
+        static void SaveRoot(DataContractJsonSerializer serializer, ITodoContainer rootContainer)
+        {
+            using (Stream stream = File.Open("serialized.json", FileMode.Create))
+            {
+                serializer.WriteObject(stream, rootContainer);
+            }
         }
 
         static bool HandleInput(ITodoContainerDisplay containerDisplay, ref ITodoContainer currentContainer)
@@ -57,6 +80,28 @@ namespace StackDo
             {
                 AddToContainer(currentContainer, input);
                 return true;
+            }
+
+            if (input.StartsWith("r ", StringComparison.OrdinalIgnoreCase))
+            {
+                string numStr = input.Substring(2);
+                int index;
+                if (int.TryParse(numStr, out index))
+                {
+                    currentContainer.RemoveChild(index);
+                    return true;
+                }
+            }
+
+            if (input.Equals("r", StringComparison.OrdinalIgnoreCase))
+            {
+                if (currentContainer.Parent != null)
+                {
+                    ITodoContainer containerToRemove = currentContainer;
+                    currentContainer = currentContainer.Parent;
+                    currentContainer.RemoveChild(containerToRemove);
+                    return true;
+                }
             }
 
             int num;

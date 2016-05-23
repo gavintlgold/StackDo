@@ -3,14 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Runtime.Serialization;
 
 using StackDo.Interface;
 
-namespace StackDo
+namespace StackDo.Core
 {
+    [DataContract]
+    [KnownType(typeof(Todo))]
     class TodoContainer : ITodoContainer
     {
-        private ISet<ITodoContainer> _children;
+        [DataMember]
+        private List<ITodoContainer> _children;
         public IEnumerable<ITodoContainer> Children
         {
             get
@@ -25,9 +29,11 @@ namespace StackDo
             set;
         }
 
+        [DataMember]
         public ITodo Todo
         {
             get;
+            private set;
         }
 
         public int NumAncestors
@@ -61,13 +67,13 @@ namespace StackDo
         /// </summary>
         public TodoContainer()
         {
-            _children = new HashSet<ITodoContainer>();
+            _children = new List<ITodoContainer>();
         }
 
-        public bool AddChild(ITodoContainer container)
+        public void AddChild(ITodoContainer container)
         {
             container.Parent = this;
-            return _children.Add(container);
+            _children.Add(container);
         }
 
         public bool RemoveChild(ITodoContainer container)
@@ -75,6 +81,21 @@ namespace StackDo
             // TODO: handle orphans
             container.Parent = null;
             return _children.Remove(container);
+        }
+
+        public bool RemoveChild(int index)
+        {
+            ITodoContainer container = _children.ElementAt(index);
+            return RemoveChild(container);
+        }
+
+        [OnDeserialized]
+        void OnDeserialized(StreamingContext ctx)
+        {
+            foreach (ITodoContainer child in _children)
+            {
+                child.Parent = this;
+            }
         }
     }
 }

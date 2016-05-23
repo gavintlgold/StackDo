@@ -41,8 +41,9 @@ namespace StackDo.Interface
             get;
         }
 
-        bool AddChild(ITodoContainer container);
+        void AddChild(ITodoContainer container);
 
+        bool RemoveChild(int index);
         bool RemoveChild(ITodoContainer container);
     }
 }

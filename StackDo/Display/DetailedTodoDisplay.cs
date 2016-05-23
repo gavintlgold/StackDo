@@ -16,6 +16,7 @@ namespace StackDo.Display
             sb.AppendFormat("{0}\n\n", todo.Name);
             if (todo.Notes != null)
             {
+                sb.AppendLine("Notes:");
                 sb.AppendFormat("{0}\n", todo.Notes);
             }
             sb.AppendFormat(" Created: {0}\n", todo.DateCreated);
