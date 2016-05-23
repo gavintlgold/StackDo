@@ -23,7 +23,7 @@ namespace StackDo.Display
                 sb.AppendFormat("{0}\n", todo.Notes);
             }
             sb.AppendFormat(" Created: {0}\n", todo.DateCreated);
-            sb.AppendFormat("Modified: {0}\n", todo.DateModified);
+            //sb.AppendFormat("Modified: {0}\n", todo.DateModified);
 
             return sb.ToString();
         }

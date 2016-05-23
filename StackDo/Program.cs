@@ -35,6 +35,7 @@ namespace StackDo
         /// <returns></returns>
         static ITodoContainer LoadRoot(string filename, DataContractJsonSerializer serializer)
         {
+            Console.WriteLine(string.Format("Loading from {0}", filename));
             if (!File.Exists(filename))
             {
                 return new TodoContainer();
@@ -53,6 +54,7 @@ namespace StackDo
         /// <param name="rootContainer"></param>
         static void SaveRoot(string filename, DataContractJsonSerializer serializer, ITodoContainer rootContainer)
         {
+            Console.WriteLine(string.Format("Saving to {0}", filename));
             using (Stream stream = File.Open(filename, FileMode.Create))
             {
                 serializer.WriteObject(stream, rootContainer);
@@ -67,10 +69,16 @@ namespace StackDo
         /// <returns></returns>
         static bool HandleInput(ITodoContainerDisplay containerDisplay, ref ITodoContainer currentContainer)
         {
-            Console.Clear();
             Console.WriteLine(containerDisplay.Display(currentContainer));
 
             string input = Console.ReadLine().Trim();
+            Console.Clear();
+
+            if (string.IsNullOrEmpty(input))
+            {
+                return true;
+            }
+
             if (input.Equals("q", StringComparison.OrdinalIgnoreCase) ||
                 input.Equals("quit", StringComparison.OrdinalIgnoreCase) ||
                 input.Equals("exit", StringComparison.OrdinalIgnoreCase))
@@ -78,12 +86,18 @@ namespace StackDo
                 return false;
             }
 
+
             if (input.Equals("p", StringComparison.OrdinalIgnoreCase))
             {
                 if (currentContainer.Parent != null)
                 {
                     currentContainer = currentContainer.Parent;
                 }
+                else
+                {
+                    Console.WriteLine("No parent.");
+                }
+                return true;
             }
 
             if (input.StartsWith("a ", StringComparison.OrdinalIgnoreCase))
@@ -99,8 +113,12 @@ namespace StackDo
                 if (int.TryParse(numStr, out index))
                 {
                     currentContainer.RemoveChild(index);
-                    return true;
                 }
+                else
+                {
+                    Console.WriteLine(string.Format("No child found matching index '{0}'", numStr));
+                }
+                return true;
             }
 
             if (input.Equals("r", StringComparison.OrdinalIgnoreCase))
@@ -110,8 +128,12 @@ namespace StackDo
                     ITodoContainer containerToRemove = currentContainer;
                     currentContainer = currentContainer.Parent;
                     currentContainer.RemoveChild(containerToRemove);
-                    return true;
                 }
+                else
+                {
+                    Console.WriteLine("Can't remove root node.");
+                }
+                return true;
             }
 
             int num;
@@ -122,8 +144,14 @@ namespace StackDo
                 {
                     currentContainer = newContainer;
                 }
+                else
+                {
+                    Console.WriteLine(string.Format("Can't find child index {0}", num));
+                }
                 return true;
             }
+
+            Console.WriteLine(string.Format("Couldn't understand command '{0}'", input));
 
             return true;
         }
