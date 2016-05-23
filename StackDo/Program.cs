@@ -10,12 +10,16 @@ namespace StackDo
 {
     class Program
     {
+        const string SAVE_PATH = "serialized.json";
+
+        static ITodoContainer _rootContainer;
+        static DataContractJsonSerializer _serializer;
+
         static void Main(string[] args)
         {
-            DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(TodoContainer));
-            string filename = "serialized.json";
-            ITodoContainer rootContainer = LoadRoot(filename, serializer);
-            ITodoContainer currentContainer = rootContainer;
+            _serializer = new DataContractJsonSerializer(typeof(TodoContainer));
+            _rootContainer = LoadRoot(SAVE_PATH, _serializer);
+            ITodoContainer currentContainer = _rootContainer;
 
             ITodoDisplay detailedDisplay = new DetailedTodoDisplay();
             ITodoDisplay summaryDisplay = new SummaryTodoDisplay();
@@ -25,7 +29,7 @@ namespace StackDo
             {
             }
 
-            SaveRoot(filename, serializer, rootContainer);
+            SaveRoot(SAVE_PATH, _serializer, _rootContainer);
         }
 
         /// <summary>
@@ -86,6 +90,11 @@ namespace StackDo
                 return false;
             }
 
+            if (input.Equals("s", StringComparison.OrdinalIgnoreCase))
+            {
+                SaveRoot(SAVE_PATH, _serializer, _rootContainer);
+                return true;
+            }
 
             if (input.Equals("p", StringComparison.OrdinalIgnoreCase))
             {
