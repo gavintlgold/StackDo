@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.IO;
-using System.Text;
-using System.Threading.Tasks;
-using System.Runtime.Serialization.Json;
-
-using StackDo.Interface;
+﻿using StackDo.Core;
 using StackDo.Display;
-using StackDo.Core;
+using StackDo.Interface;
+using System;
+using System.IO;
+using System.Linq;
+using System.Runtime.Serialization.Json;
 
 namespace StackDo
 {
@@ -16,10 +12,7 @@ namespace StackDo
     {
         static void Main(string[] args)
         {
-            DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(TodoContainer), new DataContractJsonSerializerSettings()
-            {
-
-            });
+            DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(TodoContainer));
             ITodoContainer rootContainer = LoadRoot(serializer);
             ITodoContainer currentContainer = rootContainer;
 
