@@ -13,7 +13,8 @@ namespace StackDo
         static void Main(string[] args)
         {
             DataContractJsonSerializer serializer = new DataContractJsonSerializer(typeof(TodoContainer));
-            ITodoContainer rootContainer = LoadRoot(serializer);
+            string filename = "serialized.json";
+            ITodoContainer rootContainer = LoadRoot(filename, serializer);
             ITodoContainer currentContainer = rootContainer;
 
             ITodoDisplay detailedDisplay = new DetailedTodoDisplay();
@@ -24,7 +25,7 @@ namespace StackDo
             {
             }
 
-            SaveRoot(serializer, rootContainer);
+            SaveRoot(filename, serializer, rootContainer);
         }
 
         /// <summary>
@@ -32,7 +33,7 @@ namespace StackDo
         /// </summary>
         /// <param name="serializer"></param>
         /// <returns></returns>
-        static ITodoContainer LoadRoot(String filename, DataContractJsonSerializer serializer)
+        static ITodoContainer LoadRoot(string filename, DataContractJsonSerializer serializer)
         {
             if (!File.Exists(filename))
             {
@@ -50,7 +51,7 @@ namespace StackDo
         /// </summary>
         /// <param name="serializer"></param>
         /// <param name="rootContainer"></param>
-        static void SaveRoot(DataContractJsonSerializer serializer, ITodoContainer rootContainer)
+        static void SaveRoot(string filename, DataContractJsonSerializer serializer, ITodoContainer rootContainer)
         {
             using (Stream stream = File.Open(filename, FileMode.Create))
             {
