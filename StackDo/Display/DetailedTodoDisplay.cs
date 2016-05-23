@@ -3,8 +3,16 @@ using System.Text;
 
 namespace StackDo.Display
 {
+    /// <summary>
+    /// A more detailed todo display.
+    /// </summary>
     class DetailedTodoDisplay : ITodoDisplay
     {
+        /// <summary>
+        /// Display the todo.
+        /// </summary>
+        /// <param name="todo"></param>
+        /// <returns></returns>
         public string Display(ITodo todo)
         {
             StringBuilder sb = new StringBuilder();

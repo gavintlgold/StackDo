@@ -5,12 +5,18 @@ using System.Runtime.Serialization;
 
 namespace StackDo.Core
 {
+    /// <summary>
+    /// A container for a todo, handling the parent/child relationship with other todos.
+    /// </summary>
     [DataContract]
     [KnownType(typeof(Todo))]
     class TodoContainer : ITodoContainer
     {
         [DataMember]
         private List<ITodoContainer> _children;
+        /// <summary>
+        /// The children in the todo
+        /// </summary>
         public IEnumerable<ITodoContainer> Children
         {
             get
@@ -19,12 +25,18 @@ namespace StackDo.Core
             }
         }
 
+        /// <summary>
+        /// The todo's parent, if any.
+        /// </summary>
         public ITodoContainer Parent
         {
             get;
             set;
         }
 
+        /// <summary>
+        /// The todo itself.
+        /// </summary>
         [DataMember]
         public ITodo Todo
         {
@@ -32,6 +44,9 @@ namespace StackDo.Core
             private set;
         }
 
+        /// <summary>
+        /// Number of ancestors the todo has.
+        /// </summary>
         public int NumAncestors
         {
             get
@@ -66,25 +81,42 @@ namespace StackDo.Core
             _children = new List<ITodoContainer>();
         }
 
+        /// <summary>
+        /// Add a new child todo container to this container.
+        /// </summary>
+        /// <param name="container"></param>
         public void AddChild(ITodoContainer container)
         {
             container.Parent = this;
             _children.Add(container);
         }
 
+        /// <summary>
+        /// Remove a child container.
+        /// </summary>
+        /// <param name="container"></param>
+        /// <returns></returns>
         public bool RemoveChild(ITodoContainer container)
         {
-            // TODO: handle orphans
             container.Parent = null;
             return _children.Remove(container);
         }
 
+        /// <summary>
+        /// Remove a child container by index.
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns></returns>
         public bool RemoveChild(int index)
         {
             ITodoContainer container = _children.ElementAt(index);
             return RemoveChild(container);
         }
 
+        /// <summary>
+        /// Handle custom deserialization (to hook up parents properly).
+        /// </summary>
+        /// <param name="ctx"></param>
         [OnDeserialized]
         void OnDeserialized(StreamingContext ctx)
         {

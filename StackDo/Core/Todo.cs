@@ -4,9 +4,15 @@ using System.Runtime.Serialization;
 
 namespace StackDo.Core
 {
+    /// <summary>
+    /// Generic todo object.
+    /// </summary>
     [DataContract]
     public class Todo : ITodo
     {
+        /// <summary>
+        /// Date todo was created.
+        /// </summary>
         [DataMember]
         public DateTime DateCreated
         {
@@ -14,6 +20,9 @@ namespace StackDo.Core
             private set;
         }
 
+        /// <summary>
+        /// Last modified date.
+        /// </summary>
         [DataMember]
         public DateTime DateModified
         {
@@ -21,6 +30,9 @@ namespace StackDo.Core
             private set;
         }
 
+        /// <summary>
+        /// Name for the todo.
+        /// </summary>
         [DataMember]
         public string Name
         {
@@ -28,6 +40,9 @@ namespace StackDo.Core
             private set;
         }
 
+        /// <summary>
+        /// Extra notes for the todo.
+        /// </summary>
         [DataMember]
         public string Notes
         {
@@ -35,6 +50,11 @@ namespace StackDo.Core
             private set;
         }
 
+        /// <summary>
+        /// Construct a new todo object.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="notes"></param>
         public Todo(string name, string notes = null)
         {
             Name = name;

@@ -1,5 +1,8 @@
 ﻿namespace StackDo.Interface
 {
+    /// <summary>
+    /// Interface for displaying todo containers.
+    /// </summary>
     interface ITodoContainerDisplay
     {
         /// <summary>

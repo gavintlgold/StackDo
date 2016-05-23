@@ -32,14 +32,32 @@ namespace StackDo.Interface
             get;
         }
 
+        /// <summary>
+        /// Returns how many ancestors the todo has
+        /// </summary>
         int NumAncestors
         {
             get;
         }
 
+        /// <summary>
+        /// Add a container as a child.
+        /// </summary>
+        /// <param name="container"></param>
         void AddChild(ITodoContainer container);
 
+        /// <summary>
+        /// Remove the ith child container from this container.
+        /// </summary>
+        /// <param name="index"></param>
+        /// <returns></returns>
         bool RemoveChild(int index);
+        
+        /// <summary>
+        /// Remove the specified child container from this container.
+        /// </summary>
+        /// <param name="container"></param>
+        /// <returns></returns>
         bool RemoveChild(ITodoContainer container);
     }
 }

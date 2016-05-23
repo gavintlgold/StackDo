@@ -27,27 +27,43 @@ namespace StackDo
             SaveRoot(serializer, rootContainer);
         }
 
-        static ITodoContainer LoadRoot(DataContractJsonSerializer serializer)
+        /// <summary>
+        /// Load a root todo container with the given serializer.
+        /// </summary>
+        /// <param name="serializer"></param>
+        /// <returns></returns>
+        static ITodoContainer LoadRoot(String filename, DataContractJsonSerializer serializer)
         {
-            if (!File.Exists("serialized.json"))
+            if (!File.Exists(filename))
             {
                 return new TodoContainer();
             }
 
-            using (Stream stream = File.OpenRead("serialized.json"))
+            using (Stream stream = File.OpenRead(filename))
             {
                 return (TodoContainer)serializer.ReadObject(stream);
             }
         }
 
+        /// <summary>
+        /// Save the given root todo container with the given serializer.
+        /// </summary>
+        /// <param name="serializer"></param>
+        /// <param name="rootContainer"></param>
         static void SaveRoot(DataContractJsonSerializer serializer, ITodoContainer rootContainer)
         {
-            using (Stream stream = File.Open("serialized.json", FileMode.Create))
+            using (Stream stream = File.Open(filename, FileMode.Create))
             {
                 serializer.WriteObject(stream, rootContainer);
             }
         }
 
+        /// <summary>
+        /// Display the todo container, and handle user input.
+        /// </summary>
+        /// <param name="containerDisplay"></param>
+        /// <param name="currentContainer"></param>
+        /// <returns></returns>
         static bool HandleInput(ITodoContainerDisplay containerDisplay, ref ITodoContainer currentContainer)
         {
             Console.Clear();
@@ -111,6 +127,11 @@ namespace StackDo
             return true;
         }
 
+        /// <summary>
+        /// Add a new todo item to the container
+        /// </summary>
+        /// <param name="container"></param>
+        /// <param name="input"></param>
         static void AddToContainer(ITodoContainer container, string input)
         {
             string strippedInput = input.Substring(2);
@@ -119,6 +140,11 @@ namespace StackDo
             container.AddChild(newContainer);
         }
 
+        /// <summary>
+        /// Create a new todo item from the command args.
+        /// </summary>
+        /// <param name="commandArgs"></param>
+        /// <returns></returns>
         static ITodoContainer NewTodo(string commandArgs)
         {
             // TODO: add in notes parsing

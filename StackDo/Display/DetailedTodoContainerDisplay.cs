@@ -4,12 +4,21 @@ using System.Text;
 
 namespace StackDo.Display
 {
+    /// <summary>
+    /// A detailed display for the todo container.
+    /// </summary>
     class DetailedTodoContainerDisplay : ITodoContainerDisplay
     {
         private ITodoDisplay _todoDisplay;
         private ITodoDisplay _parentDisplay;
         private ITodoDisplay _childDisplay;
 
+        /// <summary>
+        /// Construct a new detailed container display, with provided sub-display objects.
+        /// </summary>
+        /// <param name="todoDisplay"></param>
+        /// <param name="parentDisplay"></param>
+        /// <param name="childDisplay"></param>
         public DetailedTodoContainerDisplay(ITodoDisplay todoDisplay, ITodoDisplay parentDisplay, ITodoDisplay childDisplay)
         {
             _todoDisplay = todoDisplay;
@@ -17,6 +26,11 @@ namespace StackDo.Display
             _childDisplay = childDisplay;
         }
 
+        /// <summary>
+        /// Display the todo container.
+        /// </summary>
+        /// <param name="container"></param>
+        /// <returns></returns>
         public string Display(ITodoContainer container)
         {
             StringBuilder sb = new StringBuilder();
