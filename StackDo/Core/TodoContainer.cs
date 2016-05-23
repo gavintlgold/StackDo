@@ -12,7 +12,7 @@ namespace StackDo.Core
     [KnownType(typeof(Todo))]
     class TodoContainer : ITodoContainer
     {
-        [DataMember]
+        [DataMember(Name = "Children")]
         private List<ITodoContainer> _children;
         /// <summary>
         /// The children in the todo
